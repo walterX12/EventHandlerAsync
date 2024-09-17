@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <!--<TargetFramework>netstandard2.1</TargetFramework>-->
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>AsyncEvents</Title>
+    <VersionPrefix>1.0.1</VersionPrefix>
+    <Authors>Walter</Authors>
+    <Description>Async Events library</Description>
+    <!--TODO Readme-->
+    <PackageReadmeFile>Readme.md </PackageReadmeFile>
+    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+    <PackageTags>Delegate,Event,Async</PackageTags>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <Target Name="PublishNuGetLocally" AfterTargets="Build">
+    <Exec Command="dotnet pack $(ProjectPath)" />
+    <Exec Command="dotnet nuget delete --source $(UserProfile)\.nuget\packages $(PackageId) $(PackageVersion) --non-interactive" ContinueOnError="WarnAndContinue" />
+    <Exec Command="dotnet nuget push --source $(UserProfile)\.nuget\packages $(ProjectDir)bin\Release\$(PackageId).$(PackageVersion).nupkg" />
+  </Target>
+
+  <Target Name="PublishNuGet" AfterTargets="Build" Condition="'$(Configuration)' == 'Release' ">
+    <!--<Exec Command="dotnet pack $(ProjectPath)" />-->
+    <!--
+    <Exec Command="dotnet nuget push $(ProjectDir)bin\Release\$(PackageId).$(PackageVersion).nupkg - -source https://api.nuget.org/v3/index.json - -api-key replace_by_your_id" />
+    -->
+  </Target>
+
+  <ItemGroup>
+    <None Include="..\Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
